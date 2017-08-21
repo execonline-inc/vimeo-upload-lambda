@@ -1,40 +1,35 @@
 import mysql from 'mysql';
 import req from 'request';
 
-const uploadToVimeo = (message) => {
-  console.log("uploadToVimeo", message)
-  const videoLink = 'https://s3.amazonaws.com/' +
-        process.env.AWS_ENVIRONMENT_BUCKET + "/" +
-        message['outputKeyPrefix'] +
-        message['outputs'][0]['key'];
+const uploadToVimeo = message => {
+  const videoLink =
+    'https://s3.amazonaws.com/' +
+    process.env.AWS_ENVIRONMENT_BUCKET +
+    '/' +
+    message['outputKeyPrefix'] +
+    message['outputs'][0]['key'];
 
-  console.log("Uploading " + videoLink + " to Vimeo");
-  req({
-    url: 'https://api.vimeo.com/me/videos',
-    method: 'POST',
-    json: true,
-    body: {
-      type: 'pull',
-      link: videoLink
+  req(
+    {
+      url: 'https://api.vimeo.com/me/videos',
+      method: 'POST',
+      json: true,
+      body: {
+        type: 'pull',
+        link: videoLink,
+      },
+      headers: {
+        Authorization: 'bearer ' + process.env.VIMEO_API_TOKEN,
+      },
     },
-    headers: {
-      'Authorization': 'bearer ' + process.env.VIMEO_API_TOKEN
-    }
-  }, function (error, response, body) {
-    if (error) {
-      throw('upload failed:', error);
-    } else {
-      var vimeoId = parseInt(body.uri.match(/\d+/)[0]);
-
-      if(isNaN(vimeoId)){
-        throw('invalid vimeo id:', vimeoId);
-      }else{
-        updateAsset(message, vimeoId);
-      }
-
-    }
-  });
-}
+    function(err, response, body) {
+      if (err) throw ('upload failed: ', err);
+      const vimeoId = parseInt(body.uri.match(/\d+/)[0]);
+      if (isNaN(vimeoId)) throw ('invalid vimeo id:', vimeoId);
+      updateAsset(message, vimeoId);
+    },
+  );
+};
 
 const updateAsset = (message, vimeoId) => {
   const key = message.input.key;
@@ -44,7 +39,8 @@ const updateAsset = (message, vimeoId) => {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
   });
-  const query = 'UPDATE content_library_assets SET vimeo_id = ?  WHERE tmp_video = ? ';
+  const query =
+    'UPDATE content_library_assets SET vimeo_id = ?  WHERE tmp_video = ? ';
   connection.connect();
 
   connection.query(query, [vimeoId, key], (err, result) => {
@@ -52,21 +48,15 @@ const updateAsset = (message, vimeoId) => {
   });
 
   connection.end();
-}
+};
 
 class VimeoUploadLambda {
-  vimeoProcess = (message) => {
+  vimeoProcess = message => {
     const videoUrl = message['outputs'][0]['key'];
-    if (videoUrl)  {
-      if (videoUrl.match(/.*high.mp4/)) {
-        uploadToVimeo(message);
-      } else {
-        console.log('wrong video type!');
-      }
-    } else {
-      console.log('missing path to video file, unable to upload');
-    }
-  }
+    if (!videoUrl) throw 'missing path to video file, unable to upload!';
+    if (!videoUrl.match(/.*high.mp4/)) throw 'wrong video type!';
+    uploadToVimeo(message);
+  };
 }
 
 export default VimeoUploadLambda;

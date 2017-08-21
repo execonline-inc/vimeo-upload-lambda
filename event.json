@@ -1,0 +1,9 @@
+{
+  "Records": [
+    {
+      "Sns": {
+        "Message": "{\n  \"input\" : {\n    \"key\" : \"execonline-staging-rawvideo/video/JohnCostaSampleTestVid15.mp4\"\n  },\n  \"outputKeyPrefix\" : \"execonline-staging-rawvideo/video/\",\n  \"outputs\" : [ {\n    \"key\" : \"JohnCostaSampleTestVid15/high.mp4\"\n  } ]\n}"
+      }
+    }
+  ]
+}

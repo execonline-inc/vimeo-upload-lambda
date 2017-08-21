@@ -1,4 +1,4 @@
-# aws-lambda-boilerplate
+# vimeo-upload-lambda
 Use this boilerplate to get started creating your next Lambda function with Node.js
 
 ## Installation
@@ -9,44 +9,37 @@ Install Node
 nvm install
 ```
 
-```
-git clone git@github.com:execonline-inc/aws-lambda-boilerplate.git
-cp -r aws-lambda-boilerplate your-lambda-name
-cd your-lambda-name
-rm -rf .git
-```
-
 `yarn install`
 
 ## Usage
-aws-lambda-boilerplate is ES6 ready.  Functions in handler.js will execute. `serverless deploy` deploys function to AWS.
+vimeo-upload-lambda is ES6 ready.  Functions in handler.js will execute. `serverless deploy` deploys function to AWS.
 
 ## Deployment
 
 When deploying with serverless, you can set different stages that you want to deploy to.
-The stage name will be added to the service name. e.g if service name is `report-virus-lambda`, when you run
+The stage name will be added to the service name. e.g if service name is `vimeo-upload-lambda`, when you run
 
 `SLS_DEBUG='*' serverless deploy --stage development --verbose`,
 
-the Lambda will be deployed as  `report-virus-lambda-development`.
+the Lambda will be deployed as  `vimeo-upload-lambda-development`.
 
 This is great if you want to have the same lambda but with different
 configuration for environments e.g staging and production
 
-`report-virus-lambda-staging`, `report-virus-lambda-production`
+`vimeo-upload-lambda-staging`, `vimeo-upload-lambda-production`
 
 If you don't specify a stage, serverless adds the dev stage to it
-by default so if you run `serverless deploy`, what you get is `report-virus-lambda-dev`
+by default so if you run `serverless deploy`, what you get is `vimeo-upload-lambda-dev`
 
 ## What happens if I want to deploy with just a name?
 
-Assuming you want your lambda name to be named `report-virus-lambda`
+Assuming you want your lambda name to be named `vimeo-upload-lambda`
 because it's the same lambda that is used for all environments,
 
 Then you can edit your `serverless.yml` file with this
 
 ```
-  service: report-virus
+  service: vimeo-upload
   stage: lambda
 ```
 
