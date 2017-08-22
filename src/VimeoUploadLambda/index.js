@@ -8,7 +8,7 @@ const uploadToVimeo = message => {
     '/' +
     message['outputKeyPrefix'] +
     message['outputs'][0]['key'];
-
+  console.log("uploading " + videoLink + " to vimeo")
   req(
     {
       url: 'https://api.vimeo.com/me/videos',
@@ -22,9 +22,14 @@ const uploadToVimeo = message => {
         Authorization: 'bearer ' + process.env.VIMEO_API_TOKEN,
       },
     },
-    function(err, response, body) {
+    (err, response, body) => {
       if (err) throw ('upload failed: ', err);
-      const vimeoId = parseInt(body.uri.match(/\d+/)[0]);
+      let vimeoId = '';
+      if (body.uri) {
+        vimeoId = parseInt(body.uri.match(/\d+/)[0]);
+      } else {
+        console.log('vimeoId unavailable:', body);
+      }
       if (isNaN(vimeoId)) throw ('invalid vimeo id:', vimeoId);
       updateAsset(message, vimeoId);
     },
@@ -32,6 +37,7 @@ const uploadToVimeo = message => {
 };
 
 const updateAsset = (message, vimeoId) => {
+  console.log("updating asset row with vimeoId: ", vimeoId)
   const key = message.input.key;
   const connection = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -45,17 +51,29 @@ const updateAsset = (message, vimeoId) => {
 
   connection.query(query, [vimeoId, key], (err, result) => {
     if (err) throw err;
+    console.log(`updated ${result.affectedRows} rows`);
   });
 
   connection.end();
 };
 
+const processSNS = event => {
+  const message = event.Records[0].Sns.Message;
+  return JSON.parse(message);
+}
+
 class VimeoUploadLambda {
-  vimeoProcess = message => {
+  vimeoProcess = event => {
+    const message = processSNS(event);
     const videoUrl = message['outputs'][0]['key'];
+    console.log("starting vimeo processing, videoUrl: ", videoUrl)
+
     if (!videoUrl) throw 'missing path to video file, unable to upload!';
-    if (!videoUrl.match(/.*high.mp4/)) throw 'wrong video type!';
-    uploadToVimeo(message);
+    if (videoUrl.match(/.*high.mp4/)) {
+      uploadToVimeo(message);
+    } else {
+      console.log('wrong video type! exiting')
+    }
   };
 }
 
