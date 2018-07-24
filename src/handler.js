@@ -2,7 +2,7 @@ import VimeoUploadLambda from './VimeoUploadLambda';
 require('dotenv').config();
 import jf from 'jsonfile';
 
-const entry= (event, context, callback) => {
+const entry = (event, context, callback) => {
   new VimeoUploadLambda().vimeoProcess(event);
   callback(null, 'Success!');
 }
