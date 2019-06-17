@@ -1,9 +1,9 @@
 {
   "Records": [
-    {
-      "Sns": {
-        "Message": "{\n  \"input\" : {\n    \"key\" : \"execonline-staging-rawvideo/video/JohnCostaSampleTestVid15.mp4\"\n  },\n  \"outputKeyPrefix\" : \"execonline-staging-rawvideo/video/\",\n  \"outputs\" : [ {\n    \"key\" : \"JohnCostaSampleTestVid15/high.mp4\"\n  } ]\n}"
+      {
+          "Sns": {
+              "Message": "{\"Records\":[{\"s3\":{\"bucket\":{\"name\":\"execonline-staging-rawvideo\"},\"object\":{\"key\":\"video/5fa165e8ca8c775948cf_25909552.mp4\"}}}]}"
+          }
       }
-    }
   ]
 }
