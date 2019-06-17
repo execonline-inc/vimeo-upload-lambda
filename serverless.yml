@@ -17,6 +17,7 @@ provider:
   name: aws
   runtime: nodejs8.10
   timeout: 60
+  deploymentBucket: execonline-serverless-deploy-archive
 
 # you can overwrite defaults here
 #  stage: dev
