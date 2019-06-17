@@ -1,12 +1,17 @@
 # vimeo-upload-lambda
 Use this boilerplate to get started creating your next Lambda function with Node.js
 
-## Installation
+## Setup
 
-Install Node
-
+Install nvm if you don't already have it installed.
 ```
-nvm install
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+```
+
+Install Node (v8.10).
+```
+nvm install 8.10
+nvm use 8.10
 ```
 
 `yarn install`

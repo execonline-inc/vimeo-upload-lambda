@@ -15,7 +15,7 @@ service: vimeo-upload-lambda # NOTE: update this with your service name
 
 provider:
   name: aws
-  runtime: nodejs4.3
+  runtime: nodejs8.10
   timeout: 60
 
 # you can overwrite defaults here
