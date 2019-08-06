@@ -31,6 +31,6 @@
     "json-loader": "latest",
     "jsonfile": "^3.0.1",
     "mysql": "^2.14.1",
-    "req": "^0.1.4"
+    "request": "^2.88.0"
   }
 }
