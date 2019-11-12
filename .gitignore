@@ -6,4 +6,7 @@ jspm_packages
 .serverless
 .webpack
 
-.env
+.env*
+!.env.sample
+
+*.code-workspace
