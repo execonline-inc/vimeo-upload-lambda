@@ -2,7 +2,7 @@ import mysql from 'mysql';
 import req from 'request';
 
 const uploadToVimeo = (bucket, video) => {
-  const videoLink = `https://s3.amazonaws.com/${bucket}/${video}`;
+  const videoLink = `${getCloudfrontName(bucket)}/${video}`;
   console.log("uploading " + videoLink + " to vimeo")
 
   req(
@@ -31,6 +31,10 @@ const uploadToVimeo = (bucket, video) => {
     },
   );
 };
+
+const getCloudfrontName = (bucket) => {
+  `https://${bucket.replace('execonline-', '')}.execonline.com`
+}
 
 const updateAsset = (vimeoId, video) => {
   const connection = mysql.createConnection({
