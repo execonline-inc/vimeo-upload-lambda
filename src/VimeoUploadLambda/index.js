@@ -1,40 +1,39 @@
-import mysql from 'mysql';
-import req from 'request';
+import mysql from "mysql";
+import req from "request";
 
 const uploadToVimeo = (bucket, video) => {
-  const videoLink = `${getCloudfrontName(bucket)}/${video}`;
-  console.log("uploading " + videoLink + " to vimeo")
+  const videoLink = `https://${bucket.replace(
+    "execonline-",
+    ""
+  )}.execonline.com/${video}`;
+  console.log("uploading " + videoLink + " to vimeo");
 
   req(
     {
-      url: 'https://api.vimeo.com/me/videos',
-      method: 'POST',
+      url: "https://api.vimeo.com/me/videos",
+      method: "POST",
       json: true,
       body: {
-        type: 'pull',
+        type: "pull",
         link: videoLink,
       },
       headers: {
-        Authorization: 'bearer ' + process.env.VIMEO_API_TOKEN,
+        Authorization: "bearer " + process.env.VIMEO_API_TOKEN,
       },
     },
     (err, response, body) => {
-      if (err) throw ('upload failed: ', err);
-      let vimeoId = '';
+      if (err) throw ("upload failed: ", err);
+      let vimeoId = "";
       if (body.uri) {
         vimeoId = parseInt(body.uri.match(/\d+/)[0]);
       } else {
-        console.log('vimeoId unavailable:', body);
+        console.log("vimeoId unavailable:", body);
       }
-      if (isNaN(vimeoId)) throw ('invalid vimeo id:', vimeoId);
+      if (isNaN(vimeoId)) throw ("invalid vimeo id:", vimeoId);
       updateAsset(vimeoId, video);
-    },
+    }
   );
 };
-
-const getCloudfrontName = (bucket) => {
-  `https://${bucket.replace('execonline-', '')}.execonline.com`
-}
 
 const updateAsset = (vimeoId, video) => {
   const connection = mysql.createConnection({
@@ -45,7 +44,7 @@ const updateAsset = (vimeoId, video) => {
   });
 
   const query =
-    'UPDATE content_library_assets SET vimeo_id = ?  WHERE tmp_video = ? ';
+    "UPDATE content_library_assets SET vimeo_id = ?  WHERE tmp_video = ? ";
   connection.connect();
 
   connection.query(query, [vimeoId, video], (err, result) => {
@@ -56,18 +55,18 @@ const updateAsset = (vimeoId, video) => {
   connection.end();
 };
 
-const processSNS = event => {
+const processSNS = (event) => {
   const message = event.Records[0].Sns.Message;
   return JSON.parse(message);
-}
+};
 
 class VimeoUploadLambda {
-  vimeoProcess = event => {
+  vimeoProcess = (event) => {
     const message = processSNS(event);
     const bucket = message.Records[0].s3.bucket.name;
     const video = message.Records[0].s3.object.key;
-    if (!bucket) throw 'bucket name is missing, unable to upload!';
-    if (!video) throw 'video name is missing, unable to upload!';
+    if (!bucket) throw "bucket name is missing, unable to upload!";
+    if (!video) throw "video name is missing, unable to upload!";
     uploadToVimeo(bucket, video);
   };
 }
