@@ -1,3 +1,7 @@
+# Deprecated
+
+This lambda has beeen moved to the [video-processing](https://github.com/execonline-inc/video-processing/tree/master/bitmovin/v2/src/vimeo-upload-lambda) repository.
+
 # vimeo-upload-lambda
 
 AWS Lambda Function that Uploads Videos to Vimeo using the Vimeo API
