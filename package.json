@@ -1,6 +1,6 @@
 {
   "name": "vimeo-upload-lambda",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -35,7 +35,7 @@
     "request": "^2.88.0"
   },
   "engines": {
-    "node": "10.x",
+    "node": "14.x",
     "yarn": ">=1.19.0 <2.0.0"
   }
 }

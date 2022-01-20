@@ -2,7 +2,7 @@ service: vimeo-upload-lambda # NOTE: update this with your service name
 
 provider:
   name: aws
-  runtime: nodejs10.x
+  runtime: nodejs14.x
   timeout: 60
   deploymentBucket: execonline-serverless-deploy-archive
 
